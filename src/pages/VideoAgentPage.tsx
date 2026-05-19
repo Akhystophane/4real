@@ -56,13 +56,13 @@ function getVideoUrl(render: { s3_key: string; url: string }) {
 }
 
 export function VideoAgentPage({ contentItemId }: Props) {
-  const { calendarItems, scripts, setScript, sendMessage, assets, poolAssets, clearPoolAssets, triggerAssetAgent } = useApp();
+  const { calendarItems, scripts, sendMessage, poolAssets, clearPoolAssets, triggerAssetAgent } = useApp();
 
   const item = calendarItems.find((i) => i.id === contentItemId) ?? calendarItems[0];
   const script = item ? scripts[item.id] : undefined;
 
   // ── Voice-over state ──────────────────────────────────────────────────────
-  const [scriptGenerating, setScriptGenerating] = useState(false);
+  const [scriptGenerating] = useState(false);
   const [voiceoverStatus, setVoiceoverStatus] = useState<VoiceoverStatus>('idle');
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);

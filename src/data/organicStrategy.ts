@@ -220,7 +220,7 @@ export const mockOrganicStrategy: OrganicStrategy = {
       channel: 'organic',
       platforms: ['Instagram', 'TikTok', 'LinkedIn'],
       pillar: 'trust building',
-      target_audience: 'buyers and sellers',
+      target_audience: 'buyers',
       objective: 'generate leads by reframing the cost of going solo',
       format: 'talking-head educational short',
       recipe: {

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { mockProfile } from '../data/profile';
-import type { AgentProfile } from '../types';
 
 const STEPS = [
   'Business Info',
