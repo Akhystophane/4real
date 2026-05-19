@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('https://assets.website-files.com/6009ec8cda7f305645c9d91b/60176f9bb43e36419997ecfe_PPNeueMontreal-Book.otf')
+    format('opentype');
+  font-display: swap;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'PP Neue Montreal';
+  src: url('https://assets.website-files.com/6009ec8cda7f305645c9d91b/60176f9b39c5673e51a86f5a_PPNeueMontreal-Medium.otf')
+    format('opentype');
+  font-display: swap;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'PP Mondwest';
+  src: url('/PPMondwest-Regular.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 400;
+}
+
+:root {
+  background: #ffffff;
+  color: #051a24;
+  font-family: 'PP Neue Montreal', Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #ffffff;
+  color: #051a24;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 10s linear infinite;
+  will-change: transform;
+}
+
+@keyframes trailFade {
+  0% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+}
+
+.animate-trail-fade {
+  animation: trailFade 1000ms ease-out forwards;
+}
+
+@media (min-width: 768px) {
+  .animate-marquee {
+    animation-duration: 30s;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes calCardIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-cal-card-in {
+  animation: calCardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Chat animations ────────────────────────────────────────────────────── */
+
+@keyframes stepIn {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-step-in {
+  animation: stepIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+  background-size: 200% auto;
+  animation: shimmer 1.6s linear infinite;
+}
+
+@keyframes fadeIn {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes pulseRing {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  70%  { transform: scale(1.9); opacity: 0;   }
+  100% { transform: scale(1);   opacity: 0;   }
+}
+.animate-pulse-ring {
+  animation: pulseRing 1.4s ease-out infinite;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50%       { transform: translateY(-8px) scale(1.03); }
+}
+.animate-orb-float {
+  animation: orbFloat 5s ease-in-out infinite;
+}
+
+@keyframes orb2Float {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50%       { transform: translateY(6px) scale(0.97); }
+}
+.animate-orb2-float {
+  animation: orb2Float 7s ease-in-out infinite;
+}

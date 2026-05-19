@@ -1,0 +1,78 @@
+import type { OrganicPerformanceReport, PaidPerformanceReport } from '../types';
+
+export const mockOrganicPerformance: OrganicPerformanceReport = {
+  period: 'May 2026',
+  total_reach: 48200,
+  total_impressions: 124500,
+  avg_engagement_rate: 4.7,
+  follower_growth: 312,
+  top_formats: [
+    { format: 'talking-head educational short', avg_views: 8400 },
+    { format: 'neighborhood lifestyle reel', avg_views: 6200 },
+    { format: 'listing tour', avg_views: 5100 },
+    { format: 'property comparison reel', avg_views: 4300 },
+    { format: 'testimonial short', avg_views: 3800 },
+  ],
+  pillar_performance: [
+    { pillar: 'seller education', reach: 14200, engagement_rate: 6.2, saves: 340 },
+    { pillar: 'local authority', reach: 12100, engagement_rate: 5.1, saves: 280 },
+    { pillar: 'listing content', reach: 9800, engagement_rate: 4.3, saves: 190 },
+    { pillar: 'buyer education', reach: 7600, engagement_rate: 3.9, saves: 150 },
+    { pillar: 'trust building', reach: 3200, engagement_rate: 3.4, saves: 90 },
+    { pillar: 'educational', reach: 1300, engagement_rate: 2.8, saves: 45 },
+  ],
+};
+
+export const mockPaidPerformance: PaidPerformanceReport = {
+  period: 'May 2026',
+  total_spend: 2100,
+  total_leads: 74,
+  avg_cpl: 28.4,
+  avg_roas: 4.2,
+  campaigns: [
+    {
+      campaign_id: 'paid_001',
+      campaign_name: 'Seller Valuation Campaign',
+      ctr: 3.1,
+      cpc: 1.4,
+      cpl: 24.5,
+      lead_volume: 33,
+      roas: 5.1,
+      winning_variation: 'A',
+      winning_axis: 'hook — "Your home may be worth more than you think"',
+    },
+    {
+      campaign_id: 'paid_002',
+      campaign_name: 'Buyer Lead Campaign',
+      ctr: 2.2,
+      cpc: 1.9,
+      cpl: 38.0,
+      lead_volume: 16,
+      roas: 3.4,
+      winning_variation: 'B',
+      winning_axis: 'hook — "New listings under €600k"',
+    },
+    {
+      campaign_id: 'paid_003',
+      campaign_name: 'Listing Promotion — 42 Rue du Commerce',
+      ctr: 4.3,
+      cpc: 0.9,
+      cpl: 18.0,
+      lead_volume: 14,
+      roas: 6.8,
+      winning_variation: 'B',
+      winning_axis: 'creative format — rare feature angle',
+    },
+    {
+      campaign_id: 'paid_004',
+      campaign_name: 'Retargeting — Warm Leads',
+      ctr: 5.8,
+      cpc: 0.6,
+      cpl: 12.0,
+      lead_volume: 11,
+      roas: 8.2,
+      winning_variation: 'A',
+      winning_axis: 'offer — social proof angle',
+    },
+  ],
+};
