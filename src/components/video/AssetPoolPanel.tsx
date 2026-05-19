@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { CheckCircle2, Loader2, Image, Video, Music, FileText, Wand2, Search, Plus, X, Upload, Film } from 'lucide-react';
+import { Loader2, Image, Video, Music, FileText, Wand2, Search, Plus, X, Upload, Film } from 'lucide-react';
 import type { DomainAsset, DomainMapping } from '../../lib/pyramid';
 import { s3ToHttps } from '../../lib/pyramid';
 
@@ -219,7 +219,7 @@ export function AssetPoolPanel({
   onContinue,
   continueDisabled,
 }: Props) {
-  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
+  const [, setDeletedIds] = useState<Set<string>>(new Set());
 
   const handleDelete = (id: string) => {
     setDeletedIds(prev => new Set([...prev, id]));

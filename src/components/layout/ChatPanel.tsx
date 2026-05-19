@@ -2,7 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import { Send, Bot, Database, Search, Globe, CalendarPlus, BarChart2, Sparkles, Wand2, Check, ThumbsUp, RefreshCw, Zap, ChevronDown, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useApp, getViewLabel } from '../../context/AppContext';
-import type { AgentThinkingStep, ThinkingStepType, ConceptProposal, ChatMessage, QualifyingParams } from '../../context/AppContext';
+import type { AgentThinkingStep, ThinkingStepType, ChatMessage, QualifyingParams } from '../../context/AppContext';
 import { PROPERTY_LISTINGS } from '../../data/assets';
 
 const SUGGESTIONS = [

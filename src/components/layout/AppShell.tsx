@@ -31,7 +31,7 @@ function RightPanel() {
 }
 
 export function AppShell() {
-  const { appMode, setAppMode, loggedIn } = useApp();
+  const { appMode, loggedIn } = useApp();
 
   if (!loggedIn) return <Navigate to="/app" replace />;
   const [chatWidth, setChatWidth] = useState(DEFAULT_CHAT_WIDTH);

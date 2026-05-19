@@ -357,7 +357,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const triggerAssetAgent = useCallback(async (
     requiredAssets: string[],
     jobContext: { title: string; format: string; pillar: string },
-    jobId: string,
+    _jobId: string,
     onAssetResolved?: (asset: PoolAsset) => void,
   ) => {
     // Inject an agent message into chat
@@ -470,11 +470,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
             const stepId = slotStepIds[slot];
             if (stepId) markStepDone(stepId, 'generated');
             setPoolAssets(prev => {
-              const idx = prev.findLastIndex(a => a.label === payload.label);
-              if (idx === -1) return prev;
+              const reversedIdx = [...prev].reverse().findIndex((a: PoolAsset) => a.label === payload.label);
+              const resolvedIdx = reversedIdx === -1 ? -1 : prev.length - 1 - reversedIdx;
+              if (resolvedIdx === -1) return prev;
               const next = [...prev];
-              next[idx] = { ...next[idx], status: 'created' };
-              const created = next[idx];
+              next[resolvedIdx] = { ...next[resolvedIdx], status: 'created' };
+              const created = next[resolvedIdx];
               onAssetResolved?.(created);
               return next;
             });
@@ -653,17 +654,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const updateMsg = (updater: (m: ChatMessage) => ChatMessage) => {
       setChatHistory((prev) => prev.map((m) => m.id === msgId ? updater(m) : m));
-    };
-
-    const addStep = (step: AgentThinkingStep) => {
-      updateMsg((m) => ({ ...m, thinkingSteps: [...(m.thinkingSteps ?? []), step] }));
-    };
-
-    const markStepDone = (stepId: string) => {
-      updateMsg((m) => ({
-        ...m,
-        thinkingSteps: (m.thinkingSteps ?? []).map((s) => s.id === stepId ? { ...s, status: 'done' as const } : s),
-      }));
     };
 
     // Tool name → step type + label builder
