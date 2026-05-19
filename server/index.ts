@@ -1113,41 +1113,77 @@ app.post('/api/asset-agent', async (req, res) => {
 // ─── Voice-over endpoint ───────────────────────────────────────────────────────
 
 const ELEVENLABS_KEY = process.env.ELEVENLABS_API_KEY ?? '';
-const ELEVENLABS_VOICE_ID = 'jUHQdLfy668sllNiNTSW'; // Clément — French, calm, clear
+const ELEVENLABS_VOICE_ID = 'jUHQdLfy668sllNiNTSW';
 const ELEVENLABS_MODEL = 'eleven_multilingual_v2';
 
+const SPEECHMATICS_KEY = process.env.SPEECHMATICS_API_KEY ?? '';
+// Available Speechmatics voices: sarah, theo, megan, jack
+const SPEECHMATICS_VOICES: Record<string, string> = {
+  sarah: 'sarah',
+  theo:  'theo',
+  megan: 'megan',
+  jack:  'jack',
+};
+
+// TTS_PROVIDER=elevenlabs (default) | speechmatics
+const TTS_PROVIDER = process.env.TTS_PROVIDER ?? 'elevenlabs';
+
+async function generateElevenLabs(script: string): Promise<{ buffer: Buffer; contentType: string }> {
+  const resp = await fetch(
+    `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
+    {
+      method: 'POST',
+      headers: {
+        'xi-api-key': ELEVENLABS_KEY,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg',
+      },
+      body: JSON.stringify({
+        text: script,
+        model_id: ELEVENLABS_MODEL,
+        voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true },
+      }),
+    }
+  );
+  if (!resp.ok) throw new Error(`ElevenLabs ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  return { buffer: Buffer.from(await resp.arrayBuffer()), contentType: 'audio/mpeg' };
+}
+
+async function generateSpeechmatics(script: string, voice = 'sarah'): Promise<{ buffer: Buffer; contentType: string }> {
+  const voiceId = SPEECHMATICS_VOICES[voice] ?? 'sarah';
+  const resp = await fetch(
+    `https://preview.tts.speechmatics.com/generate/${voiceId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SPEECHMATICS_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: script }),
+    }
+  );
+  if (!resp.ok) throw new Error(`Speechmatics ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  return { buffer: Buffer.from(await resp.arrayBuffer()), contentType: 'audio/wav' };
+}
+
 app.post('/api/voiceover', async (req, res) => {
-  const { script, itemId } = req.body as { script: string; itemId: string };
+  const { script, itemId, provider, voice } = req.body as {
+    script: string; itemId: string; provider?: string; voice?: string;
+  };
   if (!script) { res.status(400).json({ error: 'script required' }); return; }
 
+  // Per-request provider override, falls back to server default
+  const activeProvider = provider ?? TTS_PROVIDER;
+
   try {
-    const resp = await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
-      {
-        method: 'POST',
-        headers: {
-          'xi-api-key': ELEVENLABS_KEY,
-          'Content-Type': 'application/json',
-          'Accept': 'audio/mpeg',
-        },
-        body: JSON.stringify({
-          text: script,
-          model_id: ELEVENLABS_MODEL,
-          voice_settings: { stability: 0.5, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true },
-        }),
-      }
-    );
+    const { buffer, contentType } = activeProvider === 'speechmatics'
+      ? await generateSpeechmatics(script, voice)
+      : await generateElevenLabs(script);
 
-    if (!resp.ok) {
-      const err = await resp.text();
-      res.status(resp.status).json({ error: err.slice(0, 200) });
-      return;
-    }
-
-    const audioBuffer = await resp.arrayBuffer();
-    res.setHeader('Content-Type', 'audio/mpeg');
-    res.setHeader('Content-Disposition', `attachment; filename="voiceover-${itemId}.mp3"`);
-    res.send(Buffer.from(audioBuffer));
+    const ext = contentType === 'audio/wav' ? 'wav' : 'mp3';
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="voiceover-${itemId}.${ext}"`);
+    res.send(buffer);
   } catch (err) {
     res.status(500).json({ error: err instanceof Error ? err.message : String(err) });
   }

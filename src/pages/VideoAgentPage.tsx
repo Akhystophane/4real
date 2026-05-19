@@ -66,6 +66,8 @@ export function VideoAgentPage({ contentItemId }: Props) {
   const [voiceoverStatus, setVoiceoverStatus] = useState<VoiceoverStatus>('idle');
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [ttsProvider, setTtsProvider] = useState<'elevenlabs' | 'speechmatics'>('elevenlabs');
+  const [speechmaticsVoice, setSpeechmaticsVoice] = useState<'sarah' | 'theo' | 'megan' | 'jack'>('sarah');
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -176,7 +178,12 @@ export function VideoAgentPage({ contentItemId }: Props) {
       const resp = await fetch('/api/voiceover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ script: editedScript, itemId: item.id }),
+        body: JSON.stringify({
+          script: editedScript,
+          itemId: item.id,
+          provider: ttsProvider,
+          voice: ttsProvider === 'speechmatics' ? speechmaticsVoice : undefined,
+        }),
       });
       if (!resp.ok) throw new Error(`Server error ${resp.status}`);
       const blob = await resp.blob();
@@ -502,7 +509,47 @@ export function VideoAgentPage({ contentItemId }: Props) {
 
       {/* Voice-over */}
       <div className="bg-white rounded-2xl border border-[#E8EDF0] p-5 mb-4">
-        <p className="text-sm font-medium text-[#051A24] mb-4">Voice-Over</p>
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm font-medium text-[#051A24]">Voice-Over</p>
+          {/* TTS provider selector */}
+          <div className="flex items-center gap-1 bg-[#F7F9FA] rounded-full p-0.5">
+            {(['elevenlabs', 'speechmatics'] as const).map((p) => (
+              <button
+                key={p}
+                onClick={() => { setTtsProvider(p); setVoiceoverStatus('idle'); }}
+                className={`text-[10px] px-3 py-1 rounded-full transition-all font-medium ${
+                  ttsProvider === p
+                    ? 'bg-[#051A24] text-white'
+                    : 'text-[#051A24]/40 hover:text-[#051A24]'
+                }`}
+              >
+                {p === 'elevenlabs' ? 'ElevenLabs' : 'Speechmatics'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Speechmatics voice picker */}
+        {ttsProvider === 'speechmatics' && voiceoverStatus === 'idle' && (
+          <div className="flex items-center gap-2 mb-4">
+            <p className="text-[10px] text-[#051A24]/40 uppercase tracking-widest">Voice</p>
+            <div className="flex gap-1">
+              {(['sarah', 'theo', 'megan', 'jack'] as const).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setSpeechmaticsVoice(v)}
+                  className={`text-[11px] px-3 py-1 rounded-full border transition-all capitalize ${
+                    speechmaticsVoice === v
+                      ? 'border-[#051A24] bg-[#051A24] text-white'
+                      : 'border-[#E8EDF0] text-[#051A24]/50 hover:border-[#051A24]/30'
+                  }`}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {voiceoverStatus === 'idle' && (
           <button
