@@ -61,4 +61,4 @@ AI_PROVIDER=anthropic     # Switch to "gemini" to route all AI calls through Gem
 
 ## Live Demo
 
-**http://66.245.203.24**
+**http://66.245.203.24** — hosted on Vultr, Milan IT
